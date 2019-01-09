@@ -17,7 +17,7 @@
 *.ipr
 
 ### Maven ###
-/.mvn/
+.mvn
 mvnw
 
 ### Firebase service account details ###
