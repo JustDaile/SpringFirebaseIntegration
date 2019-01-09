@@ -1,0 +1,12 @@
+#main{
+    min-height: 1400px;
+}
+
+#console{
+    min-height: 200px;
+    max-height: 200px;
+    overflow: scroll;
+    background-color: black;
+    color: white;
+    font-family: monospace;
+}

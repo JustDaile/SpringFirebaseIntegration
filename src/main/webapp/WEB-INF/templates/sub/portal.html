@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <article class="container w-80 mx-auto mt-5 p-4">
+        <h4 class="sr-only">Orders</h4>
+        <div id="console">
+            <!-- basic log console -->
+        </div>
+        <div class="row" id="items">
+            <!-- ajax load content -->
+        </div>
+    </article>
+
+    <script th:inline="javascript">
+        (function(){
+            "use strict";
+
+            function parseJson(data){
+                try{
+                    return {
+                        "data": JSON.parse(data),
+                        "error": null,
+                        "success": true
+                    };
+                }catch (e) {
+                    return {
+                        "data": null,
+                        "error": e,
+                        "success": false
+                    };
+                }
+            }
+
+            // live
+            //var ws = new WebSocket("wss://" + window.location.hostname + "/live");
+
+            // local
+            var ws = new WebSocket("ws://localhost:8080/socket");
+
+            // Use id token to gain access to firebase database listener
+            ws.onopen = function() {
+                ws.send("authorize:" + [[${idtoken}]]);
+            };
+
+            ws.onclose = function(e) {
+                console.log("Client: Connection closed");
+                console.log(e);
+            }
+
+            // Add an event listener for when a message is received from the server
+            ws.onmessage = function(incoming) {
+                var json = parseJson(incoming.data);
+                if(json.success){
+                    console.log(json.data);
+                }
+            };
+
+            $("#signout-btn").on("click", function(){
+                $.post("/logout", function(){
+                    ws.close(1000, "client logged out");
+                    window.location.replace("/"); // redirect home
+                });
+            });
+
+        })();
+    </script>
+</body>
+
+</html>

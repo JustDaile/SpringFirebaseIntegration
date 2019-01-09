@@ -1,0 +1,1 @@
+mvn clean && docker rmi app -f && docker stop app
